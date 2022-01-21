@@ -1,30 +1,31 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
+  <el-row justify="center" id="app">
+    <el-col>
+      <nav-bar></nav-bar>
+    </el-col>
+    <el-col :span="20" :xs="24">
+      <router-view></router-view>
+    </el-col>
+  </el-row>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script setup lang="ts">
+import NavBar from "@/components/NavBar.vue";
+import { usePlaceStore } from "@/store/place";
+import { useReservationStore } from "@/store/reservation";
 
-#nav {
-  padding: 30px;
+const placeStore = usePlaceStore();
+const reservationStore = useReservationStore();
+placeStore.getLocations();
+placeStore.getRooms();
+reservationStore.getReservation();
+</script>
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+<style lang="sass">
+body
+  margin: 0
+  padding: 0
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+#app > *
+  margin-bottom: 20px
 </style>
