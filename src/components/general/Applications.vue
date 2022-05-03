@@ -14,7 +14,7 @@
 import { defineComponent } from "vue";
 import { Calendar, CirclePlus } from "@element-plus/icons-vue";
 import { NavItem } from "@/models/general/navItem";
-import SingleItem from "@/components/general/SingleItem.vue";
+import SingleItem from "@/components/general/SingleApp.vue";
 
 export default defineComponent({
   name: "Applications",

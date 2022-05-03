@@ -1,8 +1,8 @@
-export interface NavItem {
+export type NavItem = {
   hide?: boolean;
   text: string;
   hint: string;
   path: string;
-  icon: any;
+  icon: never;
   // method?: () => void;
-}
+};

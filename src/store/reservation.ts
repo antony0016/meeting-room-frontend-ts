@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import { Reservation } from "@/models/reservation";
+import { CReservation } from "@/models/reservation";
 import { axiosInstance } from "@/axios";
 import { useServerStore } from "@/store/server";
 
 export const useReservationStore = defineStore("reservation", {
   state: () => ({
-    reservations: [] as Reservation[],
+    reservations: [] as CReservation[],
   }),
   getters: {},
   actions: {
@@ -15,11 +15,8 @@ export const useReservationStore = defineStore("reservation", {
       return axiosInstance
         .get(api.version + api.path.reservation)
         .then((result) => {
-          console.log(result);
+          // console.log(result.data)
           this.reservations = result.data;
-        })
-        .catch((error) => {
-          console.log(error.response);
         });
     },
   },

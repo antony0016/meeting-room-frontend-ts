@@ -3,7 +3,7 @@
     <el-col>
       <nav-bar></nav-bar>
     </el-col>
-    <el-col :span="20" :xs="24">
+    <el-col :span="24" :md="20">
       <router-view></router-view>
     </el-col>
   </el-row>
@@ -25,6 +25,7 @@ reservationStore.getReservation();
 body
   margin: 0
   padding: 0
+  font-family: 'Roboto', sans-serif !important
 
 #app > *
   margin-bottom: 20px

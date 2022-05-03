@@ -5,79 +5,68 @@
         切換{{ isList ? "圖像版" : "懷舊版" }}
       </el-button>
     </el-col>
-    <el-divider></el-divider>
-    <el-col v-show="isList">
+    <el-divider border-style="dashed"></el-divider>
+    <el-col>
       <el-card header="會議室時刻表" shadow="never">
-        <!--        <el-button @click="test">test</el-button>-->
-        <el-table
-          :data="reservations"
-          style="width: 100%"
-          @row-click="showReservation"
-        >
-          <el-table-column
-            v-for="(h, index) in tableHeaders"
-            :prop="h.prop"
-            :label="h.label"
+        <el-tabs v-model="choseLocationId">
+          <el-tab-pane
+            v-for="(location, index) in locations"
             :key="index"
+            :label="location.location_name"
+            :name="location.id.toString()"
           >
-          </el-table-column>
-        </el-table>
+          </el-tab-pane>
+        </el-tabs>
+        <reservation-table
+          v-show="isList"
+          :data="indexedReservations ? indexedReservations : []"
+          :show="isList"
+          :info-data="choseReservation"
+        >
+        </reservation-table>
+        <weekly-reservation
+          v-show="!isList"
+          :data="indexedReservations ? indexedReservations : []"
+        ></weekly-reservation>
       </el-card>
-    </el-col>
-    <el-col v-show="!isList">
-      <weekly-reservation
-        :weekly-reservation="reservations"
-      ></weekly-reservation>
     </el-col>
   </el-row>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { ReservationFilter } from "@/apis/reservation";
-import { Reservation } from "@/models/reservation";
+import { CReservation } from "@/models/reservation";
 import WeeklyReservation from "@/components/calendar/WeeklyReservation.vue";
-
-type Header = {
-  prop: string;
-  label: string;
-  width?: string;
-};
+import ReservationTable from "@/components/reservation/ReservationTable.vue";
+import { usePlaceStore } from "@/store/place";
+// import { TimeFunction } from "@/apis/general";
 
 // pinia store instance
 const reservationFilter = ReservationFilter();
-// data
-const tableHeaders = ref([
-  {
-    prop: "room_name",
-    label: "會議室",
-  },
-  {
-    prop: "reason",
-    label: "事由",
-  },
-  {
-    prop: "nickname",
-    label: "預約人",
-  },
-  {
-    prop: "use_date",
-    label: "使用日期",
-  },
-  {
-    prop: "start_time",
-    label: "開始時間",
-  },
-  {
-    prop: "end_time",
-    label: "結束時間",
-  },
-] as Header[]);
+// const timeFunction = TimeFunction();
+const placeStore = usePlaceStore();
+
+// data & computed
 const isList = ref(false);
-const showReservation = (reservation: Reservation) => {
-  console.log(reservation);
-};
-const reservations = reservationFilter.availableReservations;
+const locations = computed(() =>
+  placeStore.locations.filter((l) => !l.is_deleted)
+);
+const choseLocationId = ref("0");
+const choseReservation: CReservation = new CReservation();
+const indexedReservations = computed(
+  () =>
+    reservationFilter.indexedReservations.value[parseInt(choseLocationId.value)]
+);
+
+// watch
+watchEffect(() => {
+  // console.log(locations)
+  if (locations.value.length === 0) {
+    return;
+  }
+  choseLocationId.value = locations.value[0].id.toString();
+});
 </script>
 
 <style scoped></style>

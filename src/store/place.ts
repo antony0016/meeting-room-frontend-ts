@@ -1,17 +1,20 @@
 import { defineStore } from "pinia";
-import { Location } from "@/models/location";
-import { Room } from "@/models/room";
+import { CLocation } from "@/models/location";
+import { CRoom } from "@/models/room";
 import { useServerStore } from "@/store/server";
 import { axiosInstance } from "@/axios";
 
 export const usePlaceStore = defineStore("place", {
   state: () => ({
-    rooms: [] as Room[],
-    locations: [] as Location[],
+    rooms: [
+      { id: 0, room_name: "", location_id: 0, is_deleted: false },
+    ] as CRoom[],
+    locations: [] as CLocation[],
   }),
   getters: {
-    locationMap: (state) => {
+    roomLocationIdMap: (state) => {
       const temp = {} as { [key: number]: number };
+      // console.log(state.rooms);
       state.rooms.forEach((r) => {
         temp[r.id] = r.location_id;
       });
@@ -38,7 +41,7 @@ export const usePlaceStore = defineStore("place", {
       return axiosInstance
         .get(api.version + api.path.location)
         .then((result) => {
-          // console.log(result);
+          // console.log(result.data);
           this.locations = result.data;
         })
         .catch((error) => {

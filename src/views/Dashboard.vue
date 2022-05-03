@@ -8,14 +8,8 @@
   </el-row>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import Applications from "@/components/Applications.vue";
-
-export default defineComponent({
-  name: "Dashboard",
-  components: { Applications },
-});
+<script lang="ts" setup>
+import Applications from "@/components/general/Applications.vue";
 </script>
 
 <style scoped></style>
